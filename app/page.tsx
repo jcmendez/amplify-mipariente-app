@@ -4,15 +4,14 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import Image from 'next/image'
 import styles from './page.module.css'
+import ParienteList from "@/components/ParienteList";
 
 function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
+        <h1>Hello, Amplify 👋</h1>
+        <ParienteList/>
       </div>
 
       <div className={styles.center}>
