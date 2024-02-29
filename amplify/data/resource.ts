@@ -11,12 +11,19 @@ const schema = a.schema({
     lastName: a.string().required(),
     careTeam: a.hasOne('CareTeam'),
     tags: a.hasMany('TrackingTag')
-  }),
+  }).authorization([
+    a.allow.owner(),
+    a.allow.public().to(['read'])
+  ]),
 
   CareTeam: a.model({
     pariente: a.belongsTo('Pariente'),
-    members: a.manyToMany('Member', {relationName: 'TeamMembership'})
-  }),
+    members: a.manyToMany('Member', {relationName: 'TeamMembership'}),
+    actions: a.hasMany('ActionItem'),
+  }).authorization([
+    a.allow.owner(),
+    a.allow.public().to(['read'])
+  ]),
 
   ActionItem: a.model({
     careTeam: a.belongsTo('CareTeam'),
@@ -30,18 +37,28 @@ const schema = a.schema({
   ]),
 
   TrackingTag: a.model({
-    uuid: a.string()
-  }),
+    uuid: a.string(),
+    scans: a.hasMany('Scan'),
+  }).authorization([
+    a.allow.owner(),
+    a.allow.public().to(['read'])
+  ]),
 
   Scan: a.model({
     tag: a.hasOne('TrackingTag'),
     time: a.datetime(),
     location: a.ref('Location'),
-  }),
+  }).authorization([
+    a.allow.owner(),
+    a.allow.public().to(['read'])
+  ]),
 
   Member: a.model({
     teams: a.manyToMany('CareTeam', {relationName: 'TeamMembership'})
-  })
+  }).authorization([
+    a.allow.owner(),
+    a.allow.public().to(['read'])
+  ])
 });
 
 export type Schema = ClientSchema<typeof schema>;
