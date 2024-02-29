@@ -1,27 +1,54 @@
-import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import {type ClientSchema, a, defineData} from '@aws-amplify/backend';
 
-/*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rules below
-specify that owners, authenticated via your Auth resource can "create",
-"read", "update", and "delete" their own records. Public users,
-authenticated via an API key, can only "read" records.
-=========================================================================*/
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization([a.allow.owner(), a.allow.public().to(['read'])]),
+  Location: a.customType({
+    lat: a.float(),
+    long: a.float()
+  }),
+
+  Pariente: a.model({
+    firstName: a.string().required(),
+    lastName: a.string().required(),
+    careTeam: a.hasOne('CareTeam'),
+    tags: a.hasMany('TrackingTag')
+  }),
+
+  CareTeam: a.model({
+    pariente: a.belongsTo('Pariente'),
+    members: a.manyToMany('Member', {relationName: 'TeamMembership'})
+  }),
+
+  ActionItem: a.model({
+    careTeam: a.belongsTo('CareTeam'),
+    description: a.string(),
+    dueDate: a.datetime(),
+    doneDate: a.datetime(),
+    done: a.boolean()
+  }).authorization([
+    a.allow.owner(),
+    a.allow.public().to(['read'])
+  ]),
+
+  TrackingTag: a.model({
+    uuid: a.string()
+  }),
+
+  Scan: a.model({
+    tag: a.hasOne('TrackingTag'),
+    time: a.datetime(),
+    location: a.ref('Location'),
+  }),
+
+  Member: a.model({
+    teams: a.manyToMany('CareTeam', {relationName: 'TeamMembership'})
+  })
 });
 
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
-  schema,
-  authorizationModes: {
-    defaultAuthorizationMode: 'apiKey',
-    // API Key is used for a.allow.public() rules
+  schema, authorizationModes: {
+    defaultAuthorizationMode: 'apiKey', // API Key is used for a.allow.public() rules
     apiKeyAuthorizationMode: {
       expiresInDays: 30,
     },
