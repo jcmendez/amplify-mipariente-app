@@ -54,6 +54,8 @@ const schema = a.schema({
   ]),
 
   Member: a.model({
+    firstName: a.string().required(),
+    lastName: a.string().required(),
     teams: a.manyToMany('CareTeam', {relationName: 'TeamMembership'})
   }).authorization([
     a.allow.owner(),

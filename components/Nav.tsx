@@ -8,7 +8,6 @@ async function currentSession() {
       accessToken: accessToken,
       idToken: idToken,
       user: idToken?.payload.email ?? idToken?.payload.sub ?? undefined,
-      expires: idToken?.payload.exp * 1000 ?? undefined,
       isAuthenticated: !!accessToken && !!idToken && !!idToken.payload.email && !!idToken.payload.sub && !!idToken
     }
   } catch (err) {
