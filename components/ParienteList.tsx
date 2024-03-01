@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
+import {useState, useEffect} from "react";
+import {generateClient} from "aws-amplify/data";
+import type {Schema} from "@/amplify/data/resource";
 
 // generate our data client using the Schema from our backend
 const client = generateClient<Schema>();
@@ -11,9 +11,24 @@ export default function ParienteList() {
   const [parientes, setParientes] = useState<Schema["Pariente"][]>([]);
 
   async function listParientes() {
-    // fetch all todos
-    const { data } = await client.models.Pariente.list();
-    setParientes(data);
+    if (client.models.Pariente) {
+
+      const {data: newTodo} = await client.models.Pariente.create({
+        firstName: "Paco",
+        lastName: "Jones"
+      });
+      console.log(newTodo);
+      const {data: parientes, errors} = await client.models.Pariente.list();
+      if (errors) {
+        console.error(errors);
+        return; // early return if there are errors
+      }
+      setParientes(parientes);
+
+    } else {
+      console.error("Pariente model not defined on client");
+      console.log(client);
+    }
   }
 
   useEffect(() => {

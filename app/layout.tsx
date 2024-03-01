@@ -1,22 +1,14 @@
 import Loading from "@/components/Loading";
+import Nav from "@/components/Nav";
 import Toast from "@/components/Toast"
 import type {Metadata} from 'next'
-import {Inter} from 'next/font/google'
 import './globals.css'
 import {Suspense} from 'react';
-import Nav from "@/components/Nav";
-
-const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
   title: 'miPariente Backend App',
   description: 'Caregiver and provider app',
 }
-
-import config from "@/amplifyconfiguration.json";
-import {Amplify} from "aws-amplify";
-
-Amplify.configure(config, {ssr: true});
 
 export default function RootLayout({
                                      children,
@@ -25,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
       <html lang="en">
-      <body className={inter.className}>
+      <body>
       <Suspense fallback={<Loading/>}>
         <Nav/>
         {children}
