@@ -9,9 +9,8 @@ function Home({ signOut, user }: WithAuthenticatorProps) {
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <h1>Hello, {user?.username} 👋</h1>
+        <h1>Hello, {user?.username || "friend"} 👋</h1>
         <button onClick={signOut}>Sign out</button>
-        <Navbar user={user} />
       </div>
     </main>
   )

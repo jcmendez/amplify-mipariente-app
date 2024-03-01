@@ -1,20 +1,14 @@
 import Navbar from '@/components/Navbar';
-import { fetchAuthSession } from 'aws-amplify/auth';
+import { getCurrentUser } from 'aws-amplify/auth';
 
-async function currentSession() {
-  try {
-    const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
-    return {
-      accessToken: accessToken,
-      idToken: idToken,
-      user: idToken?.payload.email ?? idToken?.payload.sub ?? undefined,
-      isAuthenticated: !!accessToken && !!idToken && !!idToken.payload.email && !!idToken.payload.sub && !!idToken
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-export default async function Nav() {
-  const session = await currentSession();
-  return <Navbar user={session?.user} />;
+export default function Nav() {
+  return getCurrentUser().then(function (auth) {
+    console.log(`The username: ${auth.username}`);
+    console.log(`The userId: ${auth.userId}`);
+    console.log(`The signInDetails: ${auth.signInDetails}`);
+    return <Navbar user={auth.username}/>;
+  }).catch(function () {
+    console.error("Unable to getCurrentUser")
+    return <Navbar user={undefined}/>;
+  })
 }
