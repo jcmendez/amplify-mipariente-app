@@ -7,10 +7,10 @@ export default function Nav() {
   return getCurrentUser().then(function (auth) {
     console.log(`The username: ${auth.username}`);
     console.log(`The userId: ${auth.userId}`);
-    console.log(`The signInDetails: ${auth.signInDetails}`);
-    return <Navbar user={auth.username}/>;
+    console.log("The signInDetails: ", auth.signInDetails);
+    return <Navbar user={auth.username} email={auth.signInDetails?.loginId || "sample@email.com"}/>;
   }).catch(function () {
     console.error("Unable to getCurrentUser")
-    return <Navbar user={undefined}/>;
+    return <Navbar user={undefined} email={undefined}/>;
   })
 }

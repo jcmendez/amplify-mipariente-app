@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 //import { signIn, signOut } from 'next-auth/react';
-import Image from 'next/image';
+import Gravatar from 'react-gravatar';
 
 const navigation = [
   { name: 'Dashboard', href: '/' },
@@ -33,7 +33,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Navbar({ user }: { user: any }) {
+export default function Navbar({ user, email }: { user: string | undefined, email: string | undefined }) {
   const pathname = usePathname();
 
   return (
@@ -89,13 +89,7 @@ export default function Navbar({ user }: { user: any }) {
                       <div>
                         <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
-                          <Image
-                              className="h-8 w-8 rounded-full"
-                              src={user?.image || '/next.svg'}
-                              height={32}
-                              width={32}
-                              alt={`${user?.name || 'placeholder'} avatar`}
-                          />
+                          <Gravatar email={email} size={32} className="rounded-full" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -178,20 +172,14 @@ export default function Navbar({ user }: { user: any }) {
                       <>
                         <div className="flex items-center px-4">
                           <div className="flex-shrink-0">
-                            <Image
-                                className="h-8 w-8 rounded-full"
-                                src={user.image}
-                                height={32}
-                                width={32}
-                                alt={`${user.name} avatar`}
-                            />
+                            <Gravatar email={email} size={32} className="rounded-full" />
                           </div>
                           <div className="ml-3">
                             <div className="text-base font-medium text-gray-800">
-                              {user.name}
+                              {email}
                             </div>
                             <div className="text-sm font-medium text-gray-500">
-                              {user.email}
+                              {user}
                             </div>
                           </div>
                         </div>
